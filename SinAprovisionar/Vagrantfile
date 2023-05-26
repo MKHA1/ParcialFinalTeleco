@@ -1,0 +1,24 @@
+Vagrant.configure("2") do |config|
+ if Vagrant.has_plugin? "vagrant-vbguest"
+ config.vbguest.no_install = true
+ config.vbguest.auto_update = false
+ config.vbguest.no_remote = true
+ end
+ config.vm.define :cliente do |cliente|
+ config.vm.network "public_network"
+ cliente.vm.box = "centos/8"
+ cliente.vm.network :private_network, ip: "192.168.50.2"
+ config.vm.network "forwarded_port", guest: 80, host: 10024
+ cliente.vm.hostname = "cliente"
+ end
+ config.vm.define :servidortres do |servidortres|
+ config.vm.provider "virtualbox" do |v|
+   v.memory = 1024
+   v.cpus = 2
+  end
+ servidortres.vm.box = "centos/8"
+ servidortres.vm.network :private_network, ip: "192.168.50.5"
+ servidortres.vm.hostname = "servidortres"
+ end
+end
+
